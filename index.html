@@ -1,57 +1,25 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login System</title>
+  <title>Login</title>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 40px; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f3f3f3; }
-    .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 320px; text-align: center; }
-    input { width: 100%; margin: 10px 0; padding: 10px; }
-    button { padding: 10px 20px; margin: 10px 5px; cursor: pointer; }
-    .hidden { display: none; }
-    #msg { color: red; font-size: 0.9em; }
-    a { font-size: 0.9em; color: blue; cursor: pointer; display: block; margin-top: 8px; text-decoration: underline; }
+    body { font-family: Arial; padding: 50px; text-align: center; }
+    input, button { margin: 10px; padding: 10px; width: 250px; }
+    a { cursor: pointer; color: blue; text-decoration: underline; display: block; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Login Form -->
-    <div id="loginDiv">
-      <h2>Login</h2>
-      <input type="email" id="loginEmail" placeholder="Email" required>
-      <input type="password" id="loginPassword" placeholder="Password" required>
-      <button onclick="login()">Login</button>
-      <a onclick="showDiv('signupDiv')">Create Account</a>
-      <a onclick="showDiv('forgotDiv')">Forgot Password?</a>
-      <p id="loginMsg"></p>
-    </div>
-
-    <!-- Signup Form -->
-    <div id="signupDiv" class="hidden">
-      <h2>Create Account</h2>
-      <input type="email" id="signupEmail" placeholder="Email" required>
-      <input type="password" id="signupPassword" placeholder="Password" required>
-      <button onclick="signup()">Sign Up</button>
-      <a onclick="showDiv('loginDiv')">Back to Login</a>
-      <p id="signupMsg"></p>
-    </div>
-
-    <!-- Forgot Password Form -->
-    <div id="forgotDiv" class="hidden">
-      <h2>Reset Password</h2>
-      <input type="email" id="forgotEmail" placeholder="Enter your email" required>
-      <button onclick="resetPassword()">Send Reset Link</button>
-      <a onclick="showDiv('loginDiv')">Back to Login</a>
-      <p id="forgotMsg"></p>
-    </div>
-
-    <!-- Home Screen (After Login) -->
-    <div id="homeDiv" class="hidden">
-      <h2>Welcome! You're logged in.</h2>
-      <button onclick="logout()">Logout</button>
-    </div>
-  </div>
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <br>
+  <button onclick="login()">Login</button>
+  <a onclick="showSignup()">Create Account</a>
+  <a onclick="showForgot()">Forgot Password?</a>
+  <p id="msg"></p>
 
   <script>
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -69,57 +37,26 @@ const firebaseConfig = {
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    const loginDiv = document.getElementById("loginDiv");
-    const signupDiv = document.getElementById("signupDiv");
-    const forgotDiv = document.getElementById("forgotDiv");
-    const homeDiv = document.getElementById("homeDiv");
-
-    function showDiv(id) {
-      loginDiv.classList.add("hidden");
-      signupDiv.classList.add("hidden");
-      forgotDiv.classList.add("hidden");
-      homeDiv.classList.add("hidden");
-      document.getElementById(id).classList.remove("hidden");
-
-      // Clear messages
-      document.getElementById("loginMsg").innerText = "";
-      document.getElementById("signupMsg").innerText = "";
-      document.getElementById("forgotMsg").innerText = "";
-    }
-
     auth.onAuthStateChanged(user => {
       if (user) {
-        showDiv("homeDiv");
-      } else {
-        showDiv("loginDiv");
+        window.location.href = "home.html";
       }
     });
 
     function login() {
-      const email = document.getElementById("loginEmail").value;
-      const pass = document.getElementById("loginPassword").value;
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
       auth.signInWithEmailAndPassword(email, pass)
-        .then(() => showDiv("homeDiv"))
-        .catch(err => document.getElementById("loginMsg").innerText = err.message);
+        .then(() => {})
+        .catch(err => document.getElementById("msg").innerText = err.message);
     }
 
-    function signup() {
-      const email = document.getElementById("signupEmail").value;
-      const pass = document.getElementById("signupPassword").value;
-      auth.createUserWithEmailAndPassword(email, pass)
-        .then(() => showDiv("homeDiv"))
-        .catch(err => document.getElementById("signupMsg").innerText = err.message);
+    function showSignup() {
+      window.location.href = "signup.html";
     }
 
-    function resetPassword() {
-      const email = document.getElementById("forgotEmail").value;
-      auth.sendPasswordResetEmail(email)
-        .then(() => document.getElementById("forgotMsg").innerText = "Reset email sent!")
-        .catch(err => document.getElementById("forgotMsg").innerText = err.message);
-    }
-
-    function logout() {
-      auth.signOut();
+    function showForgot() {
+      window.location.href = "forgot.html";
     }
   </script>
 </body>
